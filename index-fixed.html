@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>My Ext JS App</title>
+    <!-- Quay lại ExtJS 4.2.1 đã test thành công -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/ext-all.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/resources/css/ext-all.css"
+    />
+  </head>
+  <body>
+    <script>
+      Ext.onReady(function () {
+        console.log("App starting...");
+
+        // Store cho grid
+        var store = Ext.create("Ext.data.Store", {
+          fields: ["ngayMoTap", "phan", "soLuong", "ghiChu"],
+          data: [],
+        });
+
+        // Grid
+        var grid = Ext.create("Ext.grid.Panel", {
+          title: "Danh sách dữ liệu",
+          store: store,
+          columns: [
+            { text: "Ngày mở tập", dataIndex: "ngayMoTap", width: 150 },
+            { text: "Phần", dataIndex: "phan", width: 100 },
+            { text: "Số lượng", dataIndex: "soLuong", width: 100 },
+            { text: "Ghi chú", dataIndex: "ghiChu", flex: 1 },
+          ],
+          height: 350,
+          flex: 1,
+          tbar: [
+            {
+              text: "Thêm mới",
+              handler: function () {
+                openPopup();
+              },
+            },
+          ],
+        });
+
+        // Form trên
+        var form = Ext.create("Ext.form.Panel", {
+          title: "Form nhập liệu",
+          height: 120,
+          padding: 10,
+          layout: "anchor",
+          defaults: {
+            anchor: "100%",
+            labelWidth: 100,
+          },
+          items: [
+            {
+              layout: "hbox",
+              border: false,
+              items: [
+                {
+                  xtype: "textfield",
+                  fieldLabel: "Ngày mở tập",
+                  name: "ngayMoTap",
+                  flex: 1,
+                  margin: "0 10 0 0",
+                },
+                {
+                  xtype: "textfield",
+                  fieldLabel: "Phần",
+                  name: "phan",
+                  flex: 1,
+                },
+              ],
+            },
+          ],
+        });
+
+        // Container chính
+        Ext.create("Ext.panel.Panel", {
+          renderTo: Ext.getBody(),
+          width: 900,
+          height: 600,
+          layout: {
+            type: "vbox",
+            align: "stretch",
+          },
+          items: [form, grid],
+          border: true,
+        });
+
+        // Function mở popup
+        window.openPopup = function () {
+          var popup = Ext.create("Ext.window.Window", {
+            title: "Thêm dữ liệu",
+            modal: true,
+            width: 450,
+            height: 350,
+            layout: "fit",
+            items: [
+              {
+                xtype: "form",
+                padding: 15,
+                defaults: {
+                  xtype: "textfield",
+                  labelWidth: 100,
+                  width: "100%",
+                  allowBlank: false,
+                  margin: "0 0 10 0",
+                },
+                items: [
+                  {
+                    name: "ngayMoTap",
+                    fieldLabel: "Ngày mở tập",
+                  },
+                  {
+                    name: "phan",
+                    fieldLabel: "Phần",
+                  },
+                  {
+                    xtype: "numberfield",
+                    name: "soLuong",
+                    fieldLabel: "Số lượng",
+                    minValue: 1,
+                    value: 1,
+                  },
+                  {
+                    xtype: "textareafield",
+                    name: "ghiChu",
+                    fieldLabel: "Ghi chú",
+                    height: 80,
+                    allowBlank: true,
+                  },
+                ],
+              },
+            ],
+            buttons: [
+              {
+                text: "Lưu",
+                handler: function () {
+                  var form = popup.down("form");
+                  if (form.isValid()) {
+                    var values = form.getValues();
+                    console.log("Adding data:", values);
+                    store.add(values);
+                    popup.close();
+                    Ext.Msg.alert("Thành công", "Đã thêm dữ liệu!");
+                  } else {
+                    Ext.Msg.alert("Lỗi", "Vui lòng nhập đầy đủ thông tin!");
+                  }
+                },
+              },
+              {
+                text: "Đóng",
+                handler: function () {
+                  popup.close();
+                },
+              },
+            ],
+          });
+          popup.show();
+        };
+
+        console.log("App loaded successfully!");
+      });
+    </script>
+  </body>
+</html>

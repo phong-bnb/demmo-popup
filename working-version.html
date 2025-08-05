@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ExtJS Demo - Inline Working Version</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/ext-all.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/resources/css/ext-all.css"
+    />
+  </head>
+  <body>
+    <script>
+      Ext.onReady(function () {
+        console.log("ExtJS App Starting...");
+
+        // Tạo store để lưu dữ liệu
+        var dataStore = Ext.create("Ext.data.Store", {
+          fields: ["ngayMoTap", "phan", "tap", "trangthai"],
+          data: [],
+        });
+
+        // Tạo grid panel
+        var gridPanel = Ext.create("Ext.grid.Panel", {
+          title: "Danh sách thông tin mở tập",
+          store: dataStore,
+          columns: [
+            { text: "Ngày mở tập", dataIndex: "ngayMoTap", flex: 1 },
+            { text: "Phần", dataIndex: "phan", flex: 1 },
+            { text: "Tập số", dataIndex: "tap", flex: 1 },
+            { text: "Trạng thái", dataIndex: "trangthai", flex: 2 },
+          ],
+          tbar: [
+            {
+              text: "Thêm mới",
+              handler: function () {
+                openPopup();
+              },
+            },
+          ],
+          height: 400,
+          width: "100%",
+        });
+
+        // Tạo form panel cho popup
+        var formPanel = Ext.create("Ext.form.Panel", {
+          bodyPadding: 10,
+          defaults: {
+            xtype: "textfield",
+            labelWidth: 100,
+            width: "100%",
+            margin: "0 0 10 0",
+          },
+          items: [
+            { fieldLabel: "Ngày mở tập", name: "ngayMoTap" },
+            { fieldLabel: "Phần", name: "phan" },
+            { fieldLabel: "Tập số", name: "tap" },
+            { fieldLabel: "Trạng thái", name: "trangthai" },
+          ],
+        });
+
+        // Function mở popup window
+        function openPopup() {
+          var popup = Ext.create("Ext.window.Window", {
+            title: "Thêm thông tin mở tập",
+            width: 500,
+            height: 350,
+            layout: "fit",
+            modal: true,
+            items: [formPanel],
+            buttons: [
+              {
+                text: "Lưu",
+                handler: function () {
+                  var form = formPanel.getForm();
+                  if (form.isValid()) {
+                    var values = form.getValues();
+                    dataStore.add(values);
+                    popup.close();
+                    form.reset();
+                    console.log("Data saved:", values);
+                  }
+                },
+              },
+              {
+                text: "Hủy",
+                handler: function () {
+                  popup.close();
+                },
+              },
+            ],
+          });
+          popup.show();
+        }
+
+        // Tạo viewport
+        Ext.create("Ext.container.Viewport", {
+          layout: "fit",
+          items: [gridPanel],
+        });
+
+        console.log("App loaded successfully!");
+      });
+    </script>
+  </body>
+</html>
