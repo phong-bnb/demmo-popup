@@ -53,7 +53,9 @@ Ext.define("MyApp.view.HoSo.Popup.Popup_View", {
                 var values = form.getValues();
                 console.log('values      asdsadsad ', values);
                 me.fireEvent('save', values);  // Gọi listener "save"
-                me.close();
+                // Chứ không phải btn.up('window').fireEvent('save', values);
+                // btn.up('window').fireEvent('save', values);
+                // me.close();
               }
             },
           },
