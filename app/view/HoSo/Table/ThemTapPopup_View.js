@@ -2,7 +2,6 @@ Ext.define("MyApp.view.HoSo.Table.ThemTapPopup_View", {
   extend: "Ext.form.Panel",
   xtype: "ThemTapPopup_View",
   controller: "ThemTapPopup_ViewController",
-
   layout: "vbox",
   scrollable: true,
   padding: 5,
